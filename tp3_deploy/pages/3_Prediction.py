@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import plotly.express as px
 import pickle
+from pathlib import Path
 
 from utils.data_loader import load_clean_data
 from utils.preprocessing import prepare_features
@@ -19,7 +20,8 @@ if not st.session_state.get("authenticated", False):
 
 logger.info(f"Page chargée — user : {st.session_state.get('username', '?')}")
 
-with open("assets/style.css", "r", encoding="utf-8") as f:
+
+with open(Path(__file__).parent.parent / "assets" / "style.css", "r", encoding="utf-8") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 st.title("3 — Interface de Prédiction")

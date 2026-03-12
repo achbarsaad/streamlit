@@ -1,6 +1,7 @@
 import streamlit as st
 import logging
 import datetime
+from pathlib import Path
 
 # ── Configuration logging ─────────────────────────────────────────────────────
 logging.basicConfig(
@@ -21,7 +22,8 @@ st.set_page_config(
 )
 
 # ── CSS ───────────────────────────────────────────────────────────────────────
-with open("assets/style.css", "r", encoding="utf-8") as f:
+
+with open(Path(__file__).parent / "assets" / "style.css", "r", encoding="utf-8") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 # ── Authentification basique ──────────────────────────────────────────────────
@@ -40,7 +42,7 @@ def check_credentials(username: str, password: str) -> bool:
 
 def login_form():
     """Affiche le formulaire de connexion."""
-    st.title("🔐 Connexion requise")
+    st.title(" Connexion requise")
     st.markdown("Cette application est protégée. Veuillez vous connecter pour continuer.")
 
     with st.form("login_form"):
@@ -51,12 +53,12 @@ def login_form():
     if submitted:
         # Validation des entrées
         if not username or not password:
-            st.error("❌ Veuillez remplir tous les champs.")
+            st.error(" Veuillez remplir tous les champs.")
             logger.warning("Tentative de connexion avec champs vides.")
             return
 
         if len(username) > 50 or len(password) > 100:
-            st.error("❌ Entrées trop longues.")
+            st.error(" Entrées trop longues.")
             logger.warning(f"Entrée trop longue détectée — user: {len(username)} chars.")
             return
 
@@ -67,7 +69,7 @@ def login_form():
             logger.info(f"Connexion réussie — utilisateur : {username}")
             st.rerun()
         else:
-            st.error("❌ Identifiants incorrects.")
+            st.error(" Identifiants incorrects.")
             logger.warning(f"Échec de connexion pour l'utilisateur : {username}")
 
 
@@ -81,8 +83,8 @@ logger.info(f"Page accueil chargée — user : {st.session_state.get('username',
 
 # Bouton déconnexion dans la sidebar
 with st.sidebar:
-    st.markdown(f"👤 Connecté : **{st.session_state.get('username', '')}**")
-    if st.button("🚪 Se déconnecter"):
+    st.markdown(f" Connecté : **{st.session_state.get('username', '')}**")
+    if st.button(" Se déconnecter"):
         logger.info(f"Déconnexion — user : {st.session_state.get('username', '?')}")
         for key in ["authenticated", "username", "login_time"]:
             st.session_state.pop(key, None)
@@ -92,12 +94,12 @@ st.title("🏠 TP3 — Application ML : House Prices")
 st.markdown("""
 Bienvenue ! Utilisez le **menu de gauche** pour naviguer entre les pages :
 
-- 📁 **1 Data** — Chargez et explorez votre dataset
-- 🤖 **2 Training** — Entraînez un modèle et visualisez ses performances
-- 🔮 **3 Prediction** — Faites des prédictions interactives
+-  **1 Data** — Chargez et explorez votre dataset
+- **2 Training** — Entraînez un modèle et visualisez ses performances
+-  **3 Prediction** — Faites des prédictions interactives
 """)
 
 col1, col2, col3 = st.columns(3)
-col1.info("📁 **1 Data**\nUpload CSV + exploration + visualisations")
-col2.info("🤖 **2 Training**\nEntraînement + métriques + graphiques")
-col3.info("🔮 **3 Prediction**\nSliders + prédiction + distribution")
+col1.info(" **1 Data**\nUpload CSV + exploration + visualisations")
+col2.info(" **2 Training**\nEntraînement + métriques + graphiques")
+col3.info(" **3 Prediction**\nSliders + prédiction + distribution")

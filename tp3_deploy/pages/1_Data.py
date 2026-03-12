@@ -3,23 +3,25 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from utils.data_loader import load_clean_data, to_csv_bytes
+from pathlib import Path
 
-st.set_page_config(page_title="Data", page_icon="📁", layout="wide")
+st.set_page_config(page_title="Data", page_icon="", layout="wide")
 
 import logging
 logger = logging.getLogger(__name__)
 
 # ── Auth guard ────────────────────────────────────────────────────────────────
 if not st.session_state.get("authenticated", False):
-    st.warning("🔐 Veuillez vous connecter depuis la page d'accueil.")
+    st.warning(" Veuillez vous connecter depuis la page d'accueil.")
     st.stop()
 
 logger.info(f"Page chargée — user : {st.session_state.get('username', '?')}")
 
-with open("assets/style.css", "r", encoding="utf-8") as f:
+
+with open(Path(__file__).parent.parent / "assets" / "style.css", "r", encoding="utf-8") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-st.title("📁 1 — Données & Exploration")
+st.title(" 1 — Données & Exploration")
 
 # ── Upload ────────────────────────────────────────────────────────────────────
 upload = st.file_uploader("Déposez un fichier CSV (optionnel — sinon House Prices est utilisé)", type=["csv"])
@@ -29,28 +31,28 @@ if upload is not None:
     MAX_SIZE_MB = 10
     file_size_mb = upload.size / (1024 * 1024)
     if file_size_mb > MAX_SIZE_MB:
-        st.error(f"❌ Fichier trop volumineux ({file_size_mb:.1f} MB). Maximum : {MAX_SIZE_MB} MB.")
+        st.error(f" Fichier trop volumineux ({file_size_mb:.1f} MB). Maximum : {MAX_SIZE_MB} MB.")
         logger.warning(f"Upload refusé — taille : {file_size_mb:.1f} MB")
         st.stop()
     try:
         df = pd.read_csv(upload)
         if df.empty or df.shape[1] < 2:
-            st.error("❌ Le fichier CSV semble vide ou ne contient qu'une seule colonne.")
+            st.error(" Le fichier CSV semble vide ou ne contient qu'une seule colonne.")
             st.stop()
         st.session_state["df_uploaded"] = df
         logger.info(f"CSV chargé : {upload.name} — {df.shape}")
-        st.success(f"✅ **{upload.name}** chargé — {df.shape[0]} lignes × {df.shape[1]} colonnes")
+        st.success(f"**{upload.name}** chargé — {df.shape[0]} lignes × {df.shape[1]} colonnes")
     except Exception as e:
-        st.error(f"❌ Erreur de lecture du CSV : {e}")
+        st.error(f" Erreur de lecture du CSV : {e}")
         logger.error(f"Erreur lecture CSV : {e}")
         st.stop()
 else:
     if "df_uploaded" in st.session_state:
         df = st.session_state["df_uploaded"]
-        st.info("📂 Dataset uploadé (en session).")
+        st.info(" Dataset uploadé (en session).")
     else:
         df = load_clean_data()
-        st.info("📂 Dataset House Prices par défaut.")
+        st.info(" Dataset House Prices par défaut.")
 
 num_cols = df.select_dtypes(include="number").columns.tolist()
 cat_cols = df.select_dtypes(include=["object","category"]).columns.tolist()
@@ -66,14 +68,14 @@ st.divider()
 
 # ── Tabs ──────────────────────────────────────────────────────────────────────
 tab1, tab2, tab3, tab4, tab5 = st.tabs([
-    "📄 Aperçu", "ℹ️ Info colonnes", "📊 Statistiques", "📈 Visualisations", "❓ Valeurs manquantes"
+    " Aperçu", "ℹ️ Info colonnes", " Statistiques", " Visualisations",  "Valeurs manquantes"
 ])
 
 # ── Tab 1 : Aperçu ────────────────────────────────────────────────────────────
 with tab1:
     n = st.slider("Nombre de lignes", 5, 100, 10)
     st.dataframe(df.head(n), use_container_width=True)
-    st.download_button("⬇️ Télécharger CSV", data=to_csv_bytes(df),
+    st.download_button("⬇Télécharger CSV", data=to_csv_bytes(df),
                        file_name="dataset.csv", mime="text/csv")
 
 # ── Tab 2 : Info colonnes ─────────────────────────────────────────────────────
@@ -102,13 +104,13 @@ with tab3:
 
 # ── Tab 4 : Visualisations ────────────────────────────────────────────────────
 with tab4:
-    st.markdown("### 🎨 Visualisations interactives")
+    st.markdown("###  Visualisations interactives")
 
     viz_type = st.selectbox("Type de graphique", [
-        "📊 Histogramme", "📦 Boxplot", "🔵 Scatter plot", "📈 Distribution (violin)", "🏷️ Comptage (barplot)"
+        " Histogramme", " Boxplot", " Scatter plot", " Distribution (violin)", " Comptage (barplot)"
     ])
 
-    if viz_type == "📊 Histogramme":
+    if viz_type == " Histogramme":
         col_hist = st.selectbox("Variable", num_cols, key="hist_col")
         color_by = st.selectbox("Couleur par (optionnel)", ["Aucun"] + cat_cols, key="hist_color")
         nbins    = st.slider("Nombre de bins", 10, 100, 30)
@@ -118,14 +120,14 @@ with tab4:
                            marginal="box", opacity=0.8)
         st.plotly_chart(fig, use_container_width=True)
 
-    elif viz_type == "📦 Boxplot":
+    elif viz_type == " Boxplot":
         col_box = st.selectbox("Variable numérique (y)", num_cols, key="box_y")
         grp_box = st.selectbox("Grouper par (optionnel)", ["Aucun"] + cat_cols, key="box_grp")
         grp_arg = None if grp_box == "Aucun" else grp_box
         if grp_arg and df[grp_arg].nunique() > 30:
             top30 = df[grp_arg].value_counts().head(30).index
             df_plot = df[df[grp_arg].isin(top30)]
-            st.caption("⚠️ Affichage limité aux 30 catégories les plus fréquentes.")
+            st.caption(" Affichage limité aux 30 catégories les plus fréquentes.")
         else:
             df_plot = df
         fig = px.box(df_plot, x=grp_arg, y=col_box, color=grp_arg,
@@ -134,7 +136,7 @@ with tab4:
         fig.update_layout(showlegend=False)
         st.plotly_chart(fig, use_container_width=True)
 
-    elif viz_type == "🔵 Scatter plot":
+    elif viz_type == " Scatter plot":
         col_x    = st.selectbox("Axe X", num_cols, key="sc_x")
         col_y    = st.selectbox("Axe Y", num_cols, index=min(1, len(num_cols)-1), key="sc_y")
         color_sc = st.selectbox("Couleur par (optionnel)", ["Aucun"] + cat_cols + num_cols, key="sc_c")
@@ -146,14 +148,14 @@ with tab4:
                          opacity=0.6, trendline="ols" if color_arg is None else None)
         st.plotly_chart(fig, use_container_width=True)
 
-    elif viz_type == "📈 Distribution (violin)":
+    elif viz_type == " Distribution (violin)":
         col_vio = st.selectbox("Variable numérique", num_cols, key="vio_col")
         grp_vio = st.selectbox("Grouper par", ["Aucun"] + cat_cols, key="vio_grp")
         grp_arg = None if grp_vio == "Aucun" else grp_vio
         if grp_arg and df[grp_arg].nunique() > 15:
             top15 = df[grp_arg].value_counts().head(15).index
             df_plot = df[df[grp_arg].isin(top15)]
-            st.caption("⚠️ Affichage limité aux 15 catégories les plus fréquentes.")
+            st.caption(" Affichage limité aux 15 catégories les plus fréquentes.")
         else:
             df_plot = df
         fig = px.violin(df_plot, x=grp_arg, y=col_vio, color=grp_arg, box=True,
@@ -161,7 +163,7 @@ with tab4:
         fig.update_layout(showlegend=False)
         st.plotly_chart(fig, use_container_width=True)
 
-    elif viz_type == "🏷️ Comptage (barplot)":
+    elif viz_type == " Comptage (barplot)":
         if not cat_cols:
             st.warning("Aucune colonne catégorielle dans ce dataset.")
         else:
@@ -181,7 +183,7 @@ with tab5:
     missing = df.isnull().sum()
     missing = missing[missing > 0].sort_values(ascending=False)
     if missing.empty:
-        st.success("✅ Aucune valeur manquante !")
+        st.success(" Aucune valeur manquante !")
     else:
         st.markdown(f"**{len(missing)} colonnes** contiennent des valeurs manquantes.")
         fig = px.bar(x=missing.index, y=missing.values,

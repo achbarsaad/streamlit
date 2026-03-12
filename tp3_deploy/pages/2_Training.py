@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 
 # ── Auth guard ────────────────────────────────────────────────────────────────
 if not st.session_state.get("authenticated", False):
-    st.warning("🔐 Veuillez vous connecter depuis la page d'accueil.")
+    st.warning(" Veuillez vous connecter depuis la page d'accueil.")
     st.stop()
 
 logger.info(f"Page chargée — user : {st.session_state.get('username', '?')}")
@@ -30,22 +30,22 @@ logger.info(f"Page chargée — user : {st.session_state.get('username', '?')}")
 with open("assets/style.css", "r", encoding="utf-8") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-st.title("🤖 2 — Entraînement du Modèle")
+st.title(" 2 — Entraînement du Modèle")
 
 # ── Dataset ──────────────────────────────────────────────────────────────────
 if "df_uploaded" in st.session_state:
     df = st.session_state["df_uploaded"]
-    st.info("📂 Dataset uploadé en session.")
+    st.info(" Dataset uploadé en session.")
 else:
     df = load_clean_data()
-    st.info("📂 Dataset House Prices par défaut.")
+    st.info(" Dataset House Prices par défaut.")
 
 # ── Sidebar ───────────────────────────────────────────────────────────────────
-st.sidebar.header("⚙️ Configuration")
+st.sidebar.header(" Configuration")
 
 default_target = suggest_target(df)
 target_col = st.sidebar.selectbox(
-    "🎯 Colonne cible (y)",
+    " Colonne cible (y)",
     options=list(df.columns),
     index=list(df.columns).index(default_target),
 )
@@ -56,7 +56,7 @@ task_type  = "régression" if (is_numeric and n_unique > 10) else "classificatio
 st.sidebar.caption(f"Tâche détectée : **{task_type}**")
 
 all_feats = [c for c in df.columns if c != target_col]
-selected  = st.sidebar.multiselect("📋 Features à utiliser", options=all_feats, default=all_feats)
+selected  = st.sidebar.multiselect(" Features à utiliser", options=all_feats, default=all_feats)
 if not selected:
     st.sidebar.error("Sélectionnez au moins une feature.")
     st.stop()
@@ -80,9 +80,9 @@ elif model_name == "Gradient Boosting":
 elif model_name == "Ridge":
     alpha = st.sidebar.slider("alpha", 0.01, 100.0, 1.0, 0.01)
 
-train_btn = st.sidebar.button("🚀 Entraîner", type="primary", use_container_width=True)
+train_btn = st.sidebar.button(" Entraîner", type="primary", use_container_width=True)
 
-with st.expander("👁️ Aperçu du dataset de travail", expanded=False):
+with st.expander("Aperçu du dataset de travail", expanded=False):
     st.write(f"**{df_work.shape[0]} lignes × {df_work.shape[1]} colonnes** — cible : **{target_col}**")
     st.dataframe(df_work.head(8), use_container_width=True)
 
@@ -91,7 +91,7 @@ if train_btn:
     try:
         X, y = prepare_features(df_work, target=target_col)
     except ValueError as e:
-        st.error(f"❌ {e}")
+        st.error(f" {e}")
         st.stop()
 
     with st.spinner("Entraînement en cours..."):
@@ -146,7 +146,7 @@ if train_btn:
                          "target": target_col, "task_type": task_type,
                          "label_map": label_map}, f)
 
-    st.success(f"✅ **{model_name}** entraîné — cible : **{target_col}** — tâche : **{task_type}**")
+    st.success(f" **{model_name}** entraîné — cible : **{target_col}** — tâche : **{task_type}**")
 
 # ── Résultats ─────────────────────────────────────────────────────────────────
 if "metrics" in st.session_state:
@@ -159,7 +159,7 @@ if "metrics" in st.session_state:
     lmap      = st.session_state.get("label_map", {})
 
     # Métriques
-    st.subheader("📈 Performances")
+    st.subheader(" Performances")
     cols = st.columns(len(m))
     for c, (k, v) in zip(cols, m.items()):
         fmt = f"{v:.4f}" if k in ("R²","Accuracy","F1 (weighted)") else f"{v:,.2f}"
@@ -172,7 +172,7 @@ if "metrics" in st.session_state:
         col_l, col_r = st.columns(2)
 
         with col_l:
-            st.markdown("### 🎯 Prédites vs Réelles")
+            st.markdown("###  Prédites vs Réelles")
             fig = go.Figure()
             fig.add_trace(go.Scatter(x=y_test, y=y_pred, mode="markers",
                                      marker=dict(color="#3498db", opacity=0.5, size=6),
@@ -185,7 +185,7 @@ if "metrics" in st.session_state:
             st.plotly_chart(fig, use_container_width=True)
 
         with col_r:
-            st.markdown("### 📉 Distribution des résidus")
+            st.markdown("###  Distribution des résidus")
             residuals = y_test - y_pred
             fig_r = px.histogram(x=residuals, nbins=40,
                                  title="Résidus (Réel − Prédit)",
@@ -198,7 +198,7 @@ if "metrics" in st.session_state:
 
         # Importance features (ligne complète si dispo)
         if hasattr(trained, "feature_importances_"):
-            st.markdown("### 🔍 Importance des features")
+            st.markdown("###  Importance des features")
             imp = pd.Series(trained.feature_importances_, index=feat_list).sort_values(ascending=False)
             top_n = min(len(imp), 20)  # Afficher jusqu'à 20, pas hardcodé à 15
             imp_top = imp.head(top_n).sort_values()
@@ -218,7 +218,7 @@ if "metrics" in st.session_state:
         class_names = [lmap.get(int(c), str(c)) if lmap else str(c) for c in classes_raw]
 
         with col_l:
-            st.markdown("### 🧩 Matrice de confusion")
+            st.markdown("###  Matrice de confusion")
             cm = confusion_matrix(y_test, y_pred, labels=classes_raw)
             fig_cm = px.imshow(cm, x=class_names, y=class_names,
                                color_continuous_scale="Blues",
@@ -229,7 +229,7 @@ if "metrics" in st.session_state:
             st.plotly_chart(fig_cm, use_container_width=True)
 
         with col_r:
-            st.markdown("### 📊 Distribution des prédictions")
+            st.markdown("###  Distribution des prédictions")
             pred_names  = [lmap.get(int(p), str(p)) if lmap else str(p) for p in y_pred]
             real_names  = [lmap.get(int(r), str(r)) if lmap else str(r) for r in y_test]
             dist_df = pd.DataFrame({"Classe": pred_names + real_names,
@@ -241,7 +241,7 @@ if "metrics" in st.session_state:
 
         # Importance des features (classification)
         if hasattr(trained, "feature_importances_"):
-            st.markdown("### 🔍 Importance des features")
+            st.markdown("###  Importance des features")
             imp = pd.Series(trained.feature_importances_, index=feat_list).sort_values(ascending=False)
             top_n = min(len(imp), 20)
             imp_top = imp.head(top_n).sort_values()
@@ -254,4 +254,4 @@ if "metrics" in st.session_state:
             st.plotly_chart(fig_imp, use_container_width=True)
 
 else:
-    st.info("👈 Configurez et entraînez un modèle via la barre latérale.")
+    st.info("Configurez et entraînez un modèle via la barre latérale.")

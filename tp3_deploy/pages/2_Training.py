@@ -5,6 +5,11 @@ import plotly.express as px
 import plotly.graph_objects as go
 import pickle, os
 
+# PAR
+from pathlib import Path
+
+
+
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, RandomForestClassifier, GradientBoostingClassifier
 from sklearn.linear_model import LinearRegression, Ridge, LogisticRegression
@@ -15,7 +20,7 @@ from utils.data_loader import load_clean_data
 from utils.preprocessing import prepare_features, suggest_target
 from utils.visualization import scatter_pred_vs_real, feature_importance_chart
 
-st.set_page_config(page_title="Training", page_icon="🤖", layout="wide")
+st.set_page_config(page_title="Training", page_icon="", layout="wide")
 
 import logging
 logger = logging.getLogger(__name__)
@@ -27,7 +32,8 @@ if not st.session_state.get("authenticated", False):
 
 logger.info(f"Page chargée — user : {st.session_state.get('username', '?')}")
 
-with open("assets/style.css", "r", encoding="utf-8") as f:
+with open(Path(__file__).parent.parent / "assets" / "style.css", "r", encoding="utf-8") as f:
+
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 st.title(" 2 — Entraînement du Modèle")

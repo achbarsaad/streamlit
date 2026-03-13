@@ -98,7 +98,7 @@ if model is not None:
             input_vals[col] = st.slider(col, vmin, vmax, vmed, step, key=f"s_{col}")
 
     st.divider()
-    predict_btn = st.button("🔮 Prédire", type="primary")
+    predict_btn = st.button(" Prédire", type="primary")
 
     if predict_btn:
         input_df   = pd.DataFrame([{f: input_vals.get(f, 0.0) for f in feat_names}])

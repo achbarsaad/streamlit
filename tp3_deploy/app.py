@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 # ── Page config ───────────────────────────────────────────────────────────────
 st.set_page_config(
-    page_title="TP3 — House Prices ML",
+    page_title="TP3 ",
     page_icon="🏠",
     layout="wide",
     initial_sidebar_state="expanded"

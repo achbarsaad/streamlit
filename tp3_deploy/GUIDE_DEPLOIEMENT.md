@@ -1,6 +1,6 @@
-# 📋 Guide pas-à-pas — Ce que VOUS devez faire
+#  Guide pas-à-pas — Ce que VOUS devez faire
 
-## ✅ ÉTAPE 1 — Préparer GitHub (10 min)
+##  ÉTAPE 1 — Préparer GitHub (10 min)
 
 ### 1.1 Créer un compte GitHub
 - Aller sur [https://github.com](https://github.com)
@@ -33,12 +33,11 @@ git remote add origin https://github.com/VOTRE_USERNAME/tp3-house-prices.git
 git push -u origin main
 ```
 
-> 💡 Remplacez `VOTRE_USERNAME` par votre nom d'utilisateur GitHub.
+>  Remplacez `VOTRE_USERNAME` par votre nom d'utilisateur GitHub.
 
 ---
 
-## ✅ ÉTAPE 2 — Déployer sur Streamlit Cloud (5 min)
-
+##  ÉTAPE 2 — Déployer sur Streamlit Cloud (5 min)
 1. Aller sur [https://share.streamlit.io](https://share.streamlit.io)
 2. Se connecter avec votre compte **GitHub**
 3. Cliquer **"New app"**
@@ -48,14 +47,14 @@ git push -u origin main
    - **Main file path** : `app.py`
 5. Cliquer **"Deploy!"**
 
-⏳ Le déploiement prend 2-3 minutes. Vous obtiendrez une URL du type :  
+ Le déploiement prend 2-3 minutes. Vous obtiendrez une URL du type :  
 `https://votre-username-tp3-house-prices-app-xxxx.streamlit.app`
 
 ---
 
-## ✅ ÉTAPE 3 — Configurer les Secrets (2 min)
+##  ÉTAPE 3 — Configurer les Secrets (2 min)
 
-> ⚠️ IMPORTANT : ne jamais mettre les mots de passe dans le code !
+>  IMPORTANT : ne jamais mettre les mots de passe dans le code !
 
 1. Dans Streamlit Cloud, cliquer sur les **3 points** de votre app → **"Settings"**
 2. Aller dans l'onglet **"Secrets"**
@@ -74,7 +73,7 @@ secret_key = "une_chaine_aleatoire_longue_ici"
 
 ---
 
-## ✅ ÉTAPE 4 — Vérifier HTTPS 🔒
+## ÉTAPE 4 — Vérifier HTTPS 🔒
 
 - Ouvrir votre URL Streamlit Cloud dans le navigateur
 - Vérifier qu'il y a bien un **cadenas 🔒** dans la barre d'adresse
@@ -84,7 +83,7 @@ secret_key = "une_chaine_aleatoire_longue_ici"
 
 ---
 
-## ✅ ÉTAPE 5 — Tester l'application
+##  ÉTAPE 5 — Tester l'application
 
 1. Ouvrir l'URL publique
 2. Se connecter avec :
@@ -95,7 +94,7 @@ secret_key = "une_chaine_aleatoire_longue_ici"
 
 ---
 
-## 📸 Captures d'écran à faire pour le rendu
+##  Captures d'écran à faire pour le rendu
 
 Prendre des captures de :
 - [ ] Page de connexion
@@ -104,11 +103,11 @@ Prendre des captures de :
 - [ ] Page 1 Data — onglet Visualisations (boxplot ou scatter)
 - [ ] Page 2 Training — après entraînement (métriques + graphiques)
 - [ ] Page 3 Prediction — après une prédiction
-- [ ] L'URL publique avec le cadenas HTTPS 🔒
+- [ ] L'URL publique avec le cadenas HTTPS 
 
 ---
 
-## ❓ Problèmes fréquents
+##  Problèmes fréquents
 
 | Problème | Solution |
 |----------|----------|
